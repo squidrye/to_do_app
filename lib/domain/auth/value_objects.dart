@@ -4,8 +4,9 @@ import 'package:to_do_app/domain/core/value_objects.dart';
 
 import 'package:to_do_app/domain/core/failures.dart';
 import 'package:to_do_app/domain/core/value_validators.dart';
+import 'package:uuid/uuid.dart';
 
-class EmailAddress extends ValueObject<String>{
+class EmailAddress extends ValueObject<String> {
   @override
   final Either<ValueFailure<String>, String> value;
 
@@ -14,28 +15,39 @@ class EmailAddress extends ValueObject<String>{
       validateEmailAddress(value),
     );
   }
-  const EmailAddress._(this.value);
 
+  const EmailAddress._(this.value);
 }
 
-class Password extends ValueObject<String>{
+class Password extends ValueObject<String> {
   @override
   final Either<ValueFailure<String>, String> value;
 
   const Password._(this.value);
 
-  factory Password(String value){
-    return Password._(
-      validatePassword(value)
-    );
+  factory Password(String value) {
+    return Password._(validatePassword(value));
   }
 }
 
+class UniqueId extends ValueObject<String> {
+  @override
+  final Either<ValueFailure<String>, String> value;
 
+  factory UniqueId() {
+    return UniqueId._(
+      right(const Uuid().v1()),
+    );
+  }
 
+  factory UniqueId.fromUniqueString(String uniqueId) {
+    return UniqueId._(
+      right(uniqueId),
+    );
+  }
 
-
-
+  const UniqueId._(this.value);
+}
 
 // void showingOutputOnUIExample(){
 //   final emailAddress = EmailAddress('fasfasd');
