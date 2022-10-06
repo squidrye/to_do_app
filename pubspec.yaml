@@ -47,6 +47,8 @@ dependencies:
   lint: ^1.10.0
   analyzer: ^5.1.0
   uuid: ^3.0.6
+  auto_route: ^5.0.1
+  auto_route_generator: ^5.0.2
 
 dependency_overrides:
   analyzer: ^4.0.0

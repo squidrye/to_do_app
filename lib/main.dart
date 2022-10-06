@@ -5,9 +5,10 @@ import 'package:to_do_app/injection.dart';
 import 'package:to_do_app/presentation/core/my_app.dart';
 
 Future<void >main() async{
+
   WidgetsFlutterBinding.ensureInitialized();
   configureInjection(Environment.prod);
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
