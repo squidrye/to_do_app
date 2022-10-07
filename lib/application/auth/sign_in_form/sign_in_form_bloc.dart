@@ -21,70 +21,84 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
     on<SignInFormEvent>((event, emit) async {
       //might cause bug
       await event.map<FutureOr<void>>(
-          emailChanged: (e) {
-        emit(state.copyWith(
-          email: EmailAddress(e.email),
-          authFailureOrSuccessOption: none(),
-        ));
-      },
-          passwordChanged: (e){
-        emit(state.copyWith(
-          pass: Password(e.pass),
-          authFailureOrSuccessOption: none(),
-        ));
-      },
-          registerWithEmailAndPasswordPressed: (e) async{
-        Either<AuthFailure, Unit>? failureOrSuccess;
-        if (state.email.isValid() && state.pass.isValid()) {
+        emailChanged: (e) {
+          emit(
+            state.copyWith(
+              email: EmailAddress(e.email),
+              authFailureOrSuccessOption: none(),
+            ),
+          );
+        },
+        passwordChanged: (e) {
+          emit(
+            state.copyWith(
+              pass: Password(e.pass),
+              authFailureOrSuccessOption: none(),
+            ),
+          );
+        },
+        registerWithEmailAndPasswordPressed: (e) async {
+          Either<AuthFailure, Unit>? failureOrSuccess;
+          if (state.email.isValid() && state.pass.isValid()) {
+            emit(
+              state.copyWith(
+                isSubmitting: true,
+                authFailureOrSuccessOption: none(),
+              ),
+            );
+            failureOrSuccess = await _authFacade.registerWithEmailAndPassword(
+              email: state.email,
+              pass: state.pass,
+            );
+          }
+          emit(
+            state.copyWith(
+              isSubmitting: false,
+              showErrorMessages: true,
+              authFailureOrSuccessOption:
+                  failureOrSuccess == null ? none() : some(failureOrSuccess),
+            ),
+          );
+        },
+        signInWithEmailAndPasswordPressed: (e) async {
+          Either<AuthFailure, Unit>? failureOrSuccess;
+          if (state.email.isValid() && state.pass.isValid()) {
+            emit(
+              state.copyWith(
+                isSubmitting: true,
+                authFailureOrSuccessOption: none(),
+              ),
+            );
+            failureOrSuccess = await _authFacade.signInWithEmailAndPassword(
+              email: state.email,
+              pass: state.pass,
+            );
+          }
+          emit(
+            state.copyWith(
+              isSubmitting: false,
+              showErrorMessages: true,
+              authFailureOrSuccessOption:
+                  failureOrSuccess == null ? none() : some(failureOrSuccess),
+            ),
+          );
+        },
+        signInWithGooglePressed: (e) async {
           emit(
             state.copyWith(
               isSubmitting: true,
               authFailureOrSuccessOption: none(),
             ),
           );
-          failureOrSuccess = await _authFacade.registerWithEmailAndPassword(
-              email: state.email, pass: state.pass);
-        }
-        emit(state.copyWith(
-          isSubmitting: false,
-          showErrorMessages: true,
-          authFailureOrSuccessOption:
-              failureOrSuccess == null ? none() : some(failureOrSuccess),
-        ));
-      },
-        signInWithEmailAndPasswordPressed: (e) async{
-        if (state.email.isValid() && state.pass.isValid()) {
+          final failureOrSuccess = await _authFacade.signInWithGoogle();
           emit(
             state.copyWith(
               isSubmitting: true,
-              authFailureOrSuccessOption: none(),
+              authFailureOrSuccessOption: some(failureOrSuccess),
             ),
           );
-          final failureOrSuccess = await _authFacade.signInWithEmailAndPassword(
-              email: state.email, pass: state.pass);
-          emit(state.copyWith(
-            isSubmitting: false,
-            authFailureOrSuccessOption: some(failureOrSuccess),
-          ));
-        }
-        emit(state.copyWith(
-          showErrorMessages: true,
-          authFailureOrSuccessOption: none(),
-        ));
-      },
-          signInWithGooglePressed: (e) async{
-        emit(
-          state.copyWith(
-            isSubmitting: true,
-            authFailureOrSuccessOption: none(),
-          ),
-        );
-        final failureOrSuccess = await _authFacade.signInWithGoogle();
-        emit(state.copyWith(
-          isSubmitting: true,
-          authFailureOrSuccessOption: some(failureOrSuccess),
-        ));
-      });
+        },
+      );
     });
   }
 }

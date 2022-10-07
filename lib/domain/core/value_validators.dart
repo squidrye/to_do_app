@@ -23,3 +23,41 @@ Either<ValueFailure<String>, String> validatePassword(String password) {
     return left(ValueFailure.shortPassword(failedValue: password));
   }
 }
+
+Either<ValueFailure<String>, String> validateMaxStringLength(
+    String input, int maxLength) {
+  if (input.length <= maxLength) {
+    return right(input);
+  } else {
+    return left(
+      ValueFailure.exceedingLength(failedValue: input, max: maxLength),
+    );
+  }
+}
+
+Either<ValueFailure<String>, String> validateFieldNotEmpty(String input) {
+  if (input.isNotEmpty) {
+    return right(input);
+  } else {
+    return left(ValueFailure.empty(failedValue: input));
+  }
+}
+
+Either<ValueFailure<String>, String> validateSingleLine(String input) {
+  if (!input.contains("\n")) {
+    return right(input);
+  } else {
+    return left(ValueFailure.multiLine(failedValue: input));
+  }
+}
+
+Either<ValueFailure<List<T>>, List<T>> validateMaxListLength<T>(
+    List<T> input, int maxLength) {
+  if (input.length <= maxLength) {
+    return right(input);
+  } else {
+    return left(
+      ValueFailure.listTooLong(failedValue: input, max: maxLength),
+    );
+  }
+}

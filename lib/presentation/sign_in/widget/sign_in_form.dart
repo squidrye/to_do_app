@@ -15,7 +15,13 @@ class SignInForm extends StatelessWidget {
             (failure) => ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  failure.maybeMap(cancelledByUser: (val)=>"$val",orElse: () => "Some error occured"),
+                  failure.map(
+                    cancelledByUser: (val) => "$val",
+                    emailAlreadyInUse: (val) => "email already in use",
+                    serverError: (val) => "Server Error",
+                    invalidEmailAndPasswordCombination: (val) =>
+                        "Invalid Combo",
+                  ),
                 ),
               ),
             ),
@@ -117,7 +123,13 @@ class SignInForm extends StatelessWidget {
                         );
                   },
                   child: const Text("SIGN IN WITH GOOGLE"),
-                )
+                ),
+                if (state.isSubmitting) ...[
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const LinearProgressIndicator(),
+                ]
               ],
             ),
           ),
