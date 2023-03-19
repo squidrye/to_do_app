@@ -4,28 +4,38 @@ part 'failures.freezed.dart';
 
 @freezed
 abstract class ValueFailure<T> with _$ValueFailure<T> {
-  const factory ValueFailure.invalidEmail({
+ const factory ValueFailure.auth(AuthFormValueFailure<T> f) = _Auth<T>;
+ const factory ValueFailure.notes(NoteValueFailure<T> f) = _Note<T>;
+}
+
+@freezed
+abstract class AuthFormValueFailure<T> with _$AuthFormValueFailure<T>{
+  const factory AuthFormValueFailure.invalidEmail({
     required String failedValue,
   }) = InvalidEmail<T>;
 
-  const factory ValueFailure.shortPassword({
+  const factory AuthFormValueFailure.shortPassword({
     required String failedValue,
   }) = ShortPassword<T>;
+}
 
-  const factory ValueFailure.exceedingLength({
+@freezed
+abstract class NoteValueFailure<T> with _$NoteValueFailure<T>{
+
+  const factory NoteValueFailure.exceedingLength({
     required T failedValue,
     required int max,
   }) = ExceedingLength<T>;
 
-  const factory ValueFailure.empty({
+  const factory NoteValueFailure.empty({
     required T failedValue,
   }) = Empty<T>;
 
-  const factory ValueFailure.multiLine({
+  const factory NoteValueFailure.multiLine({
     required T failedValue,
   }) = MultiLine<T>;
 
-  const factory ValueFailure.listTooLong({
+  const factory NoteValueFailure.listTooLong({
     required T failedValue,
     required int max,
   }) = ListTooLong<T>;

@@ -6,9 +6,9 @@ import 'package:to_do_app/domain/core/value_transformer.dart';
 import '../core/value_validators.dart';
 import 'package:to_do_app/domain/core/failures.dart';
 
-class NoteBody extends ValueObject<String> {
+class NoteBody extends NotesValueObject<String> {
   @override
-  final Either<ValueFailure<String>, String> value;
+  final Either<NoteValueFailure<String>, String> value;
   static const maxLength = 1000;
 
   factory NoteBody(String input) {
@@ -21,9 +21,9 @@ class NoteBody extends ValueObject<String> {
   const NoteBody._(this.value);
 }
 
-class TodoName extends ValueObject<String> {
+class TodoName extends NotesValueObject<String> {
   @override
-  final Either<ValueFailure<String>, String> value;
+  final Either<NoteValueFailure<String>, String> value;
   static const maxLength = 30;
 
   factory TodoName(String input) {
@@ -37,9 +37,9 @@ class TodoName extends ValueObject<String> {
   const TodoName._(this.value);
 }
 
-class List3<T> extends ValueObject<List<T>> {
+class List3<T> extends NotesValueObject<List<T>> {
   @override
-  final Either<ValueFailure<List<T>>, List<T>> value;
+  final Either<NoteValueFailure<List<T>>, List<T>> value;
   static const maxLength = 3;
 
   factory List3(List<T> input) {
@@ -58,7 +58,7 @@ class List3<T> extends ValueObject<List<T>> {
   }
 }
 
-class NoteColor extends ValueObject{
+class NoteColor extends NotesValueObject{
   static const List<Color> predefinedColors = [
     Color(0xfffafafa), // canvas
     Color(0xfffa8072), // salmon
@@ -69,7 +69,7 @@ class NoteColor extends ValueObject{
     Color(0xfffffdd0), // cream
   ];
   @override
-  final Either<ValueFailure<Color>, Color> value;
+  final Either<NoteValueFailure<Color>, Color> value;
 
   factory NoteColor(Color input){
     return NoteColor._(

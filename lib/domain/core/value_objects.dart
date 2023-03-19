@@ -4,14 +4,21 @@ import 'package:to_do_app/domain/core/exceptions.dart';
 import 'failures.dart';
 
 @immutable
-abstract class ValueObject<T> {
-  const ValueObject();
+abstract class AuthFormValueObject<T> {
+  const AuthFormValueObject();
 
-  Either<ValueFailure<T>, T> get value;
+  Either<AuthFormValueFailure<T>, T> get value;
 
   ///throws [UnexpectedValueError] containing the [ValueFailure]
-  T getOrCrash(){
-    return value.fold((l) => throw UnexpectedValueError(l), (r) =>r);
+  T getOrCrash() {
+    return value.fold((l) => throw UnexpectedValueError(ValueFailure.auth(l)), (r) => r);
+  }
+
+  Either<AuthFormValueFailure<dynamic>, Unit> get failureOrUnit {
+    return value.fold(
+      (l) => left(l),
+      (r) => right(unit),
+    );
   }
 
   bool isValid() => value.isRight();
@@ -19,9 +26,41 @@ abstract class ValueObject<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is ValueObject<T> &&
-              value.runtimeType == other.runtimeType &&
-              value == other.value;
+      other is AuthFormValueObject<T> && value.runtimeType == other.runtimeType && value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  String toString() {
+    return 'Value{value: $value}';
+  }
+}
+
+@immutable
+abstract class NotesValueObject<T> {
+  const NotesValueObject();
+
+  Either<NoteValueFailure<T>, T> get value;
+
+  ///throws [UnexpectedValueError] containing the [ValueFailure]
+  T getOrCrash() {
+    return value.fold((l) => throw UnexpectedValueError(ValueFailure.notes(l)), (r) => r);
+  }
+
+  Either<NoteValueFailure<dynamic>, Unit> get failureOrUnit {
+    return value.fold(
+      (l) => left(l),
+      (r) => right(unit),
+    );
+  }
+
+  bool isValid() => value.isRight();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NotesValueObject<T> && value.runtimeType == other.runtimeType && value == other.value;
 
   @override
   int get hashCode => value.hashCode;
